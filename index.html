@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>D&D DICED DICE - Mobile Optimized</title>
+    <title>D&D DICE</title>
     <style>
         :root {
             --primary-blue: #4a90e2;
@@ -17,35 +17,54 @@
         body {
             background-color: var(--bg-color);
             color: var(--dice-bg);
-            /* 維持您喜歡的原本字體 */
             font-family: 'Segoe UI', system-ui, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px 15px; /* 手機端間距微調 */
+            /* 控制整體頁面與螢幕兩邊的距離 */
+            padding: 30px 20px; 
             margin: 0;
             overflow-x: hidden;
         }
 
-        h1 { font-size: 2.8rem; font-weight: 800; margin-bottom: 5px; letter-spacing: -1px; }
-        .subtitle { color: var(--label-gray); margin-bottom: 30px; }
+        h1 { 
+            font-size: 3rem; 
+            font-weight: 800; 
+            margin-bottom: 30px; 
+            letter-spacing: -1px; 
+        }
 
-        /* 控制面板：手機版改為寬度自適應 */
+        /* 控制面板：保持與手機兩側空隙並讓內部並排 */
         .ui-panel {
             background: white;
             padding: 20px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             display: flex; 
-            flex-direction: column; /* 手機版選項上下排列更好按 */
-            gap: 20px; 
-            width: 70%;
-            max-width: 400px;
+            flex-direction: row; /* 橫向排列 */
+            flex-wrap: wrap;     /* 允許換行（給按鈕用）*/
+            justify-content: space-between;
+            gap: 15px;
+            width: 100%;         /* 配合 body 的 padding 產生兩側空隙 */
+            max-width: 450px;
+            box-sizing: border-box; /* 確保 padding 不會撐破寬度 */
             margin-bottom: 40px;
         }
 
-        .control-group { display: flex; flex-direction: column; gap: 8px; }
-        label { font-weight: 600; font-size: 0.9rem; color: var(--label-gray); }
+        .control-group { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 8px; 
+            flex: 1;             /* 讓 TYPE 和 QUANTITY 平分空間 */
+            min-width: 100px; 
+        }
+
+        label { 
+            font-weight: 800; 
+            font-size: 0.85rem; 
+            color: var(--label-gray);
+            white-space: nowrap; 
+        }
 
         select, input { 
             padding: 12px; 
@@ -54,6 +73,8 @@
             font-size: 1rem; 
             outline: none;
             font-family: inherit;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         button {
@@ -62,15 +83,15 @@
             border: none; 
             padding: 15px; 
             border-radius: 10px; 
-            font-size: 1.2rem; 
-            font-weight: bold; 
+            font-size: 1.3rem; 
+            font-weight: 800; 
             cursor: pointer; 
             transition: 0.2s;
-            width: 100%; /* 按鈕充滿寬度，手機好按 */
+            width: 100%;         /* ROLL 按鈕獨佔一行 */
+            margin-top: 5px;
         }
-        button:active { transform: scale(0.98); background: var(--primary-blue); }
+        button:active { transform: scale(0.96); background: var(--primary-blue); }
 
-        /* 骰子托盤：讓骰子在手機螢幕內自動換行 */
         #dice-tray { 
             display: flex; 
             flex-wrap: wrap; 
@@ -80,7 +101,8 @@
         }
 
         .dice {
-            width: 80px; height: 80px; /* 手機版骰子稍微縮小一點點點 */
+            width: 80px; 
+            height: 80px; 
             background: var(--dice-bg);
             display: flex; 
             justify-content: center; 
@@ -92,7 +114,7 @@
             position: relative;
         }
 
-        /* 幾何形狀裁切 */
+        /* 幾何裁切 */
         .shape-4 { clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
         .shape-6 { border-radius: 12px; }
         .shape-8 { clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
@@ -113,7 +135,6 @@
 <body>
 
     <h1>D&D DICE</h1>
-    <p class="subtitle"></p>
 
     <div class="ui-panel">
         <div class="control-group">
@@ -192,7 +213,7 @@
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
-            }).catch(e => console.log('Sync Error'));
+            }).catch(e => console.log('Sync Off'));
         }
     </script>
 </body>
