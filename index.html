@@ -3,73 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>D&D DICED DICE - Mobile Pro</title>
+    <title>D&D DICED DICE - Pro Sync</title>
     <style>
         :root {
             --primary-blue: #4a90e2;
             --bg-color: #f8f9fa;
             --dice-bg: #2c3e50;
             --text-on-dice: #ffffff;
+            --gold-glow: #f1c40f;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--dice-bg);
-            font-family: system-ui, -apple-system, sans-serif;
+            /* 使用 Arial Black 找回厚重的粗體感 */
+            font-family: 'Arial Black', Gadget, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px 10px; /* 減少手機邊距 */
+            padding: 20px 10px;
             margin: 0;
             overflow-x: hidden;
         }
 
-        h1 { font-size: 2rem; margin: 10px 0; } /* 縮小手機標題 */
+        h1 { 
+            font-size: 2.8rem; 
+            font-weight: 900; 
+            margin: 15px 0 5px 0; 
+            letter-spacing: -2px;
+            text-transform: uppercase;
+        }
 
+        .subtitle { 
+            font-family: sans-serif; 
+            font-weight: bold; 
+            color: #95a5a6; 
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+        }
+
+        /* 控制面板 */
         .ui-panel {
             background: white;
-            padding: 15px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             display: flex;
-            flex-wrap: wrap; /* 手機版自動換行 */
+            flex-wrap: wrap;
             justify-content: center;
             gap: 15px;
             width: 90%;
-            margin-bottom: 30px;
+            max-width: 500px;
+            margin-bottom: 40px;
         }
 
-        .control-group { display: flex; flex-direction: column; gap: 5px; }
-        select, input { padding: 10px; border: 2px solid #edf2f7; border-radius: 8px; }
+        .control-group { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 120px; }
+        
+        label { font-family: sans-serif; font-weight: 800; font-size: 0.8rem; color: #7f8c8d; }
+
+        select, input { 
+            padding: 12px; 
+            border: 3px solid #edf2f7; 
+            border-radius: 12px; 
+            font-family: 'Arial Black', sans-serif;
+            font-size: 1rem;
+            outline: none;
+        }
 
         button {
             background: var(--dice-bg);
             color: white;
-            padding: 12px 25px;
-            border-radius: 8px;
-            font-weight: bold;
-            width: 100%; /* 手機按鈕加寬好點擊 */
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-family: 'Arial Black', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 900;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+            box-shadow: 0 5px 0px #1a252f;
+            margin-top: 10px;
         }
 
-        #dice-tray { 
-            display: flex; 
-            flex-wrap: wrap; 
-            justify-content: center; 
-            gap: 15px; /* 縮小骰子間距 */
-            width: 100%;
-        }
+        button:active { transform: translateY(3px); box-shadow: 0 2px 0px #1a252f; }
+
+        /* 骰子托盤 */
+        #dice-tray { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; width: 100%; }
 
         .dice {
-            width: 75px; height: 75px; /* 稍微縮小骰子以適應手機 */
+            width: 85px; 
+            height: 85px;
             background: var(--dice-bg);
-            display: flex; justify-content: center; align-items: center;
-            font-size: 1.8rem; color: var(--text-on-dice);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            font-size: 2.6rem; /* 數字加大 */
+            font-weight: 900;  /* 數字最粗 */
+            color: var(--text-on-dice);
+            box-shadow: 0 6px 0px rgba(0,0,0,0.2);
+            position: relative;
         }
 
-        /* 形狀裁切維持不變 */
+        /* 形狀裁切 */
         .shape-4 { clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
-        .shape-6 { border-radius: 10px; }
+        .shape-6 { border-radius: 15px; }
         .shape-8 { clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
         .shape-10 { clip-path: polygon(50% 0%, 100% 35%, 80% 100%, 20% 100%, 0% 35%); }
         .shape-12 { clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%); }
@@ -78,16 +116,29 @@
         .rolling { animation: tumble 0.4s infinite linear; background: #34495e; color: transparent; }
         @keyframes tumble { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        #total-banner { margin-top: 30px; font-size: 2rem; font-weight: 800; opacity: 0; }
+        .settled { animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes pop { 0% { transform: scale(0.5); } 100% { transform: scale(1); } }
+
+        #total-banner { 
+            margin-top: 40px; 
+            font-size: 3rem; 
+            font-weight: 900; 
+            opacity: 0; 
+            transition: 0.5s;
+            text-shadow: 2px 2px 0px #fff, 4px 4px 0px rgba(0,0,0,0.1);
+        }
+
+        .nat-20 { color: var(--gold-glow) !important; }
     </style>
 </head>
 <body>
 
     <h1>D&D DICE</h1>
+    <div class="subtitle">CLOUD SYNC ACTIVE</div>
 
     <div class="ui-panel">
         <div class="control-group">
-            <label>類型</label>
+            <label>DICE TYPE</label>
             <select id="diceType">
                 <option value="4">D4</option>
                 <option value="6" selected>D6</option>
@@ -98,16 +149,17 @@
             </select>
         </div>
         <div class="control-group">
-            <label>數量</label>
+            <label>QUANTITY</label>
             <input type="number" id="diceCount" value="1" min="1" max="20">
         </div>
-        <button onclick="startRoll()">ROLL & SYNC</button>
+        <button onclick="startRoll()">ROLL DESTINY</button>
     </div>
 
     <div id="dice-tray"></div>
-    <div id="total-banner">Total: 0</div>
+    <div id="total-banner">TOTAL: 0</div>
 
     <script>
+        // 使用您的新部署網址
         const GOOGLE_URL = 'https://script.google.com/macros/s/AKfycbx22pq-sHL44DqzQgxaibIDGih8T7kA1jOTTOQ1j8b_LEUov9pgy_cvBFny2LVeVWB3/exec';
 
         function startRoll() {
@@ -128,7 +180,7 @@
                 dice.className = `dice shape-${type} rolling`;
                 tray.appendChild(dice);
                 
-                const delay = 400 + (i * 200);
+                const delay = 500 + (i * 200);
                 
                 setTimeout(() => {
                     const value = Math.floor(Math.random() * type) + 1;
@@ -137,26 +189,33 @@
                     finished++;
 
                     dice.classList.remove('rolling');
+                    dice.classList.add('settled');
                     dice.innerText = value;
-                    
-                    if (finished === count) {
-                        banner.innerText = `Total: ${total}`;
-                        banner.style.opacity = '1';
-                        
-                        const payload = {
-                            combo: count + "D" + type,
-                            list: results.join(", ")
-                        };
+                    if (type == "20" && value == 20) dice.classList.add('nat-20');
 
-                        fetch(GOOGLE_URL, {
-                            method: 'POST',
-                            mode: 'no-cors',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(payload)
-                        }).catch(e => console.log('Sync Error'));
+                    if (finished === count) {
+                        finalizeRoll(count, type, results, total, banner);
                     }
                 }, delay);
             }
+        }
+
+        function finalizeRoll(count, type, results, total, banner) {
+            banner.innerText = `TOTAL: ${total}`;
+            banner.style.opacity = '1';
+
+            const payload = {
+                combo: count + "D" + type,
+                list: results.join(", "),
+                total: total
+            };
+
+            fetch(GOOGLE_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).catch(e => console.log('Offline'));
         }
     </script>
 </body>
