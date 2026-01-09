@@ -206,6 +206,7 @@
             const payload = {
                 combo: count + "D" + type,
                 list: results.join(", ")
+                total: total  //
             };
 
             fetch(GOOGLE_URL, {
@@ -213,7 +214,7 @@
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
-            }).catch(e => console.log('Sync Off'));
+            }).catch(e => console.log('Sync Error'));
         }
     </script>
 </body>
