@@ -7,114 +7,64 @@
     <style>
         :root {
             --primary-blue: #4a90e2;
-            --gold-glow: #f1c40f;
-            --bg-color: #f8f9fa;
             --dice-bg: #2c3e50;
             --text-on-dice: #ffffff;
             --label-gray: #95a5a6;
         }
 
         body {
-            background-color: var(--bg-color);
+            background-color: #f8f9fa;
             color: var(--dice-bg);
             font-family: 'Segoe UI', system-ui, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* 控制整體頁面與螢幕兩邊的距離 */
             padding: 30px 20px; 
             margin: 0;
-            overflow-x: hidden;
         }
 
-        h1 { 
-            font-size: 3rem; 
-            font-weight: 800; 
-            margin-bottom: 30px; 
-            letter-spacing: -1px; 
-        }
+        h1 { font-size: 3rem; font-weight: 800; margin-bottom: 30px; }
 
-        /* 控制面板：保持與手機兩側空隙並讓內部並排 */
         .ui-panel {
             background: white;
             padding: 20px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             display: flex; 
-            flex-direction: row; /* 橫向排列 */
-            flex-wrap: wrap;     /* 允許換行（給按鈕用）*/
+            flex-direction: row;
+            flex-wrap: wrap;
             justify-content: space-between;
             gap: 15px;
-            width: 100%;         /* 配合 body 的 padding 產生兩側空隙 */
+            width: 100%;
             max-width: 450px;
-            box-sizing: border-box; /* 確保 padding 不會撐破寬度 */
+            box-sizing: border-box;
             margin-bottom: 40px;
         }
 
-        .control-group { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 8px; 
-            flex: 1;             /* 讓 TYPE 和 QUANTITY 平分空間 */
-            min-width: 100px; 
-        }
-
-        label { 
-            font-weight: 800; 
-            font-size: 0.85rem; 
-            color: var(--label-gray);
-            white-space: nowrap; 
-        }
+        .control-group { flex: 1; display: flex; flex-direction: column; gap: 8px; min-width: 100px; }
+        label { font-weight: 800; font-size: 0.85rem; color: var(--label-gray); }
 
         select, input { 
-            padding: 12px; 
-            border: 2px solid #edf2f7; 
-            border-radius: 10px; 
-            font-size: 1rem; 
-            outline: none;
-            font-family: inherit;
-            width: 100%;
-            box-sizing: border-box;
+            padding: 12px; border: 2px solid #edf2f7; border-radius: 10px; 
+            font-size: 1rem; width: 100%; box-sizing: border-box;
         }
 
         button {
-            background: var(--dice-bg); 
-            color: white; 
-            border: none; 
-            padding: 15px; 
-            border-radius: 10px; 
-            font-size: 1.3rem; 
-            font-weight: 800; 
-            cursor: pointer; 
-            transition: 0.2s;
-            width: 100%;         /* ROLL 按鈕獨佔一行 */
-            margin-top: 5px;
+            background: var(--dice-bg); color: white; border: none; padding: 15px; 
+            border-radius: 10px; font-size: 1.3rem; font-weight: 800; cursor: pointer; 
+            width: 100%; margin-top: 5px;
         }
-        button:active { transform: scale(0.96); background: var(--primary-blue); }
+        button:active { background: var(--primary-blue); transform: scale(0.98); }
 
-        #dice-tray { 
-            display: flex; 
-            flex-wrap: wrap; 
-            justify-content: center; 
-            gap: 15px; 
-            width: 100%;
-        }
+        #dice-tray { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; width: 100%; }
 
         .dice {
-            width: 80px; 
-            height: 80px; 
-            background: var(--dice-bg);
-            display: flex; 
-            justify-content: center; 
-            align-items: center;
-            font-size: 2.2rem; 
-            font-weight: 800; 
-            color: var(--text-on-dice);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.15); 
-            position: relative;
+            width: 80px; height: 80px; background: var(--dice-bg);
+            display: flex; justify-content: center; align-items: center;
+            font-size: 2.2rem; font-weight: 800; color: white;
+            position: relative; transition: 0.2s;
         }
 
-        /* 幾何裁切 */
         .shape-4 { clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
         .shape-6 { border-radius: 12px; }
         .shape-8 { clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
@@ -123,13 +73,9 @@
         .shape-20 { clip-path: polygon(50% 0%, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%); }
 
         .rolling { animation: tumble 0.4s infinite linear; background: #34495e; color: transparent; }
-        @keyframes tumble { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes tumble { 100% { transform: rotate(360deg); } }
 
-        .settled { animation: pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes pop { 0% { transform: scale(0.5); } 100% { transform: scale(1); } }
-
-        #total-banner { margin-top: 30px; font-size: 2.5rem; font-weight: 800; opacity: 0; transition: 0.5s; }
-        .nat-20 { color: var(--gold-glow) !important; text-shadow: 0 0 10px rgba(241, 196, 15, 0.8); }
+        #total-banner { margin-top: 30px; font-size: 2.5rem; font-weight: 800; opacity: 0; }
     </style>
 </head>
 <body>
@@ -152,7 +98,7 @@
             <label>QUANTITY</label>
             <input type="number" id="diceCount" value="1" min="1" max="20">
         </div>
-        <button onclick="startRoll()">ROLL</button>
+        <button id="rollBtn" onclick="startRoll()">ROLL</button>
     </div>
 
     <div id="dice-tray"></div>
@@ -164,9 +110,11 @@
         function startRoll() {
             const tray = document.getElementById('dice-tray');
             const banner = document.getElementById('total-banner');
-            const type = document.getElementById('diceType').value;
+            const type = parseInt(document.getElementById('diceType').value);
             const count = parseInt(document.getElementById('diceCount').value);
             
+            if (isNaN(count) || count < 1) return;
+
             tray.innerHTML = '';
             banner.style.opacity = '0';
             
@@ -179,8 +127,6 @@
                 dice.className = `dice shape-${type} rolling`;
                 tray.appendChild(dice);
                 
-                const delay = 400 + (i * 200);
-                
                 setTimeout(() => {
                     const value = Math.floor(Math.random() * type) + 1;
                     results.push(value);
@@ -188,33 +134,28 @@
                     finished++;
 
                     dice.classList.remove('rolling');
-                    dice.classList.add('settled');
                     dice.innerText = value;
-                    if (type == "20" && value == 20) dice.classList.add('nat-20');
 
                     if (finished === count) {
-                        finalizeAndSync(count, type, results, total, banner);
+                        banner.innerText = "Total: " + total;
+                        banner.style.opacity = '1';
+                        
+                        // 確保這裡的欄位名稱跟 GAS 的 data.total 等對應
+                        const payload = {
+                            combo: count + "D" + type,
+                            list: results.join(", "),
+                            total: total
+                        };
+
+                        fetch(GOOGLE_URL, {
+                            method: 'POST',
+                            mode: 'no-cors',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        }).catch(err => console.log("Sync Error"));
                     }
-                }, delay);
+                }, 400 + (i * 150));
             }
-        }
-
-        function finalizeAndSync(count, type, results, total, banner) {
-            banner.innerText = `Total: ${total}`;
-            banner.style.opacity = '1';
-
-            const payload = {
-                combo: count + "D" + type,
-                list: results.join(", "),
-                total: total  //
-            };
-
-            fetch(GOOGLE_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            }).catch(e => console.log('Sync Error'));
         }
     </script>
 </body>
